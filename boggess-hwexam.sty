@@ -1,0 +1,184 @@
+
+%----------------- Identification ----------------
+
+\NeedsTeXFormat{LaTeX2e}
+\ProvidesPackage{boggess-hw}[2015/10/21
+  Brandon Boggess's homework and exam macros]
+
+%----------------- Package loading ---------------
+
+\RequirePackage{geometry}
+\RequirePackage{framed}
+\RequirePackage{tikz}
+\RequirePackage{fancyhdr}
+\RequirePackage{boxedminipage}
+
+\RequirePackage{boggess-macros}
+
+\usetikzlibrary{positioning}
+
+%----------------- Package options ---------------
+
+\newif\if@homework
+\@homeworkfalse
+\DeclareOption{homework}{\@homeworktrue}
+\newif\if@exam
+\@examfalse
+\DeclareOption{exam}{\@examtrue}
+
+\ProcessOptions
+
+\newif\ifanswers
+\answersfalse
+
+\if@homework
+\geometry{left=1.4in, right=1.4in, top=1.0in}
+\pagestyle{empty}
+\fi
+
+\if@exam
+\geometry{left=1.2in, right=1.2in, top=0.8in}
+\pagestyle{empty}
+\fi
+
+%----------------- Numbering ---------------------
+
+% For definition, theorem, etc.
+\renewcommand\thesubsection{\arabic{subsection}}
+
+%----------------- Preamble stuff ----------------
+
+% For homeworks
+\def\thename{Use \texttt{\textbackslash name\{\}} to set your name}
+\def\theclass{Math ????}
+\def\thehwno{??}
+\def\theduedate{Due when?}
+\def\thecollaborators{}
+\def\thetitle{}
+
+\newcommand\name[1]{\global\def\thename{#1}}
+\newcommand\class[1]{\global\def\theclass{#1}}
+\newcommand\homeworknum[1]{\global\def\thehwno{#1}}
+\newcommand\duedate[1]{\global\def\theduedate{#1}}
+\newcommand\collaborators[1]{\global\def\thecollaborators{#1}}
+\renewcommand\title[1]{\global\def\thetitle{#1}}
+
+\AtBeginDocument{%
+  \ifthenelse{\equal{\thetitle}{}}%
+    {\title{{\theclass} Homework \thehwno}}{}%
+  \ifanswers\if@homework%
+  \pagestyle{fancy}%
+  \fancyfoot{}
+  \fancyhead[LE,RO]{\small\thepage}
+  \fancyhead[RE]{\small\textsc{\thename}}
+  \fancyhead[LO]{\small\textsc{\thetitle}}
+  \fi\fi%
+}
+
+
+%----------------- Homework ----------------------
+
+\newcommand\hwtitle{%
+  \ifanswers\thispagestyle{plain}\else\thispagestyle{empty}\fi%
+  \noindent%
+  \begin{center}%
+    \textbf{\thetitle}\\%
+    \vspace{.25\baselineskip}
+    \ifanswers\thename\else\theduedate\fi%
+  \end{center}%
+  \ifanswers\begingroup%
+  \renewcommand\thefootnote{}%
+  \ifthenelse{\equal{\thecollaborators}{}}{}%
+  {\footnote{\textit{Collaborators:} \thecollaborators}%
+    \addtocounter{footnote}{-1}}%
+  \endgroup\fi%
+  \vskip\baselineskip}
+
+\newenvironment{textproblems}[1][Exercises from the text:]{%
+  \par\noindent #1
+  \begin{list}{}{%
+      \setlength{\leftmargin}{0pt}%
+      \setlength{\rightmargin}{0pt}%
+      \setlength{\itemsep}{0pt}%
+      \setlength{\topsep}{.5\baselineskip}%
+      \setlength{\listparindent}{\parindent}%
+    }}{%
+  \end{list}}
+
+\newcounter{problem}
+\newcounter{subproblem}[problem]
+\newcounter{subanswer}[problem]
+%
+%% Optional argument: for a comment about the problems
+%\newenvironment{problems}[1][]{%
+%  \begin{list}{\textbf{\large\refstepcounter{problem}\arabic{problem}. }}{%
+%      \setlength{\leftmargin}{0pt}%
+%      \setlength{\rightmargin}{0pt}%
+%      \setlength{\itemsep}{\baselineskip}%
+%      \setlength{\topsep}{\baselineskip}%
+%      \setlength{\itemindent}{0pt}%
+%      \setlength{\listparindent}{\parindent}%
+%    }%
+%    \ifthenelse{\equal{#1}{}}{}{\item[] #1}}{%
+%  \end{list}}
+
+\newenvironment{problem}[1][]{%
+  \stepcounter{problem}
+  \bigskip%
+  \noindent\begin{boxedminipage}{\columnwidth}%
+  \def\@tempa{#1}%
+  \ifx\@tempa\empty\else%
+    \textbf{#1}\hspace{0.5em}%
+  \fi%
+}{%
+  \end{boxedminipage}%
+}
+
+\newenvironment{subproblems}{%
+  \begin{list}{\textbf{(\refstepcounter{subproblem}\alph{subproblem})}}{%
+      \setlength{\leftmargin}{2em}%
+      \setlength{\rightmargin}{0pt}%
+      \setlength{\itemsep}{.5\baselineskip}%
+      \setlength{\topsep}{.25\baselineskip}%
+      \setlength{\itemindent}{0pt}%
+      \setlength{\listparindent}{\parindent}%
+      \let\subproblem\item%
+    }}{%
+  \end{list}}
+
+\newenvironment{answer}[1][]{%
+  \setcounter{subproblem}{0}%
+  \def\@tempa{#1}
+  \ifanswers\else\setbox0=\vbox\bgroup\fi%
+  \begin{list}{}{%
+      \setlength{\leftmargin}{0pt}%
+      \setlength{\rightmargin}{0pt}%
+      \setlength{\itemsep}{\baselineskip}%
+      \setlength{\topsep}{\baselineskip}%
+      \setlength{\itemindent}{0pt}%
+      \setlength{\listparindent}{\parindent}%
+    }%
+    \item}{%
+  \ifx\@tempa\empty%
+    \mbox{}\penalty10000\hfill\jdr-hwexam@endmark%
+  \else
+  \fi
+  \end{list}%
+  \ifanswers\else\egroup\fi}
+
+\newenvironment{subanswers}{%
+  \begin{list}{\textbf{(\refstepcounter{subanswer}\alph{subanswer})}}{%
+      \setlength{\leftmargin}{2em}%
+      \setlength{\rightmargin}{0pt}%
+      \setlength{\itemsep}{.5\baselineskip}%
+      \setlength{\topsep}{.25\baselineskip}%
+      \setlength{\itemindent}{0pt}%
+      \setlength{\listparindent}{\parindent}%
+      \let\subanswer\item%
+    }}{%
+  \end{list}}
+
+% default endmark is small black square
+\def\jdr-hwexam@endmark{\ensuremath{\scriptscriptstyle\blacksquare}}
+
+\endinput
