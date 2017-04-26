@@ -222,6 +222,10 @@
 \renewcommand*\d{{\operatorname{d}}}
 \newcommand*\del{\partial}
 \newcommand*\Del{\nabla}
+\newcommand*\der[3][]{\frac{\d^{#1} #2}{\d #3^{#1}}}
+\newcommand*\doperator[2][]{\frac{\d^{#1}}{\d #2^{#1}}}
+\newcommand*\pder[3][]{\frac{\partial^{#1} #2}{\partial #3^{#1}}}
+\newcommand*\pdoperator[2][]{\frac{\del^{#1}}{\del #2^{#1}}}
 
 % Arrows
 \newcommand*\inject{\ensuremath{\hookrightarrow}}
@@ -280,6 +284,8 @@
 \newcommand*\sptxt[1]{\quad\text{ #1 }\quad}
 \newcommand*\Sptxt[1]{\qquad\text{ #1 }\qquad}
 \newcommand\ignore[1]{}
+% Consistent notation for unit groups
+\newcommand*\units[1]{{#1}^{\times}}
 
 % Small matrices
 \newenvironment{smm}{\left[\begin{smallmatrix}}
