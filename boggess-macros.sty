@@ -236,8 +236,10 @@
 
 % Enclosures
 \newcommand*\angles[1]{\ensuremath{\langle#1\rangle}}
-\newcommand*\ceil[1]{\lceil#1\rceil}
-\newcommand*\floor[1]{\lfloor#1\rfloor}
+%\newcommand*\ceil[1]{\lceil#1\rceil}
+\DeclarePairedDelimiter{\ceil}{\lceil}{\rceil}
+%\newcommand*\floor[1]{\lfloor#1\rfloor}
+\DeclarePairedDelimiter{\floor}{\lfloor}{\rfloor}
 % Power series brackets
 \newcommand*\ps[1]{{\llbracket#1\rrbracket}}
 \newcommand*\llparen{(\kern -.2em(}
@@ -395,6 +397,11 @@
 % In a super or subscript
 \mathtextb{an}
 \mathtextb{sm}
+
+% Setting notation for roots of unity
+\newcommand*\rou[1]{\ensuremath{\boldsymbol{\mu}_{#1}}}
+% Fix a notation for set cardinality
+\newcommand*\card[1]{\ensuremath{\# #1}}
 
 % Shortcut to make a generic figure
 %   \genericfig[where]{basename}{extension}{caption}
